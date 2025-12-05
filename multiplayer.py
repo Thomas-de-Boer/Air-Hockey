@@ -1,4 +1,5 @@
 import pygame
+import pygame._sdl2.touch
 import ctypes
 ctypes.windll.user32.SetProcessDPIAware()
 pygame.display.init()
@@ -17,7 +18,7 @@ BG = pygame.transform.scale(pygame.image.load("AirHockey/assets/standard_backgro
 
 RED_MODEL = pygame.transform.scale(pygame.image.load("AirHockey/assets/red_player.png"), (PLAYER_WIDTH, PLAYER_HEIGHT)).convert_alpha()
 BLUE_MODEL = pygame.transform.scale(pygame.image.load("AirHockey/assets/blue_player.png"), (PLAYER_WIDTH, PLAYER_HEIGHT)).convert_alpha()  
-PUCK_MODEL = pygame.transform.scale(pygame.image.load("AirHockey/assets/temp_puck.png"), (PUCK_WIDTH, PUCK_HEIGHT)).convert_alpha()
+PUCK_MODEL = pygame.transform.scale(pygame.image.load("AirHockey/assets/puck.png"), (PUCK_WIDTH, PUCK_HEIGHT)).convert_alpha()
 
 # wall positions
 walls = [
@@ -34,14 +35,7 @@ walls = [
 # ((0, 0), (-1, 900)), left wall
 # ((0, 900), (1600, 1)), bottom wall
 # ((1600, 0), (1, 900)), right wall
-
 # middle walls
-
-# ((-WIN_SIZE[0] / 2, 0), (WIN_SIZE[0] * 2, -WIN_SIZE[0])),
-# ((0, 0), (-WIN_SIZE[0], WIN_SIZE[1])),
-# ((-WIN_SIZE[0] / 2, WIN_SIZE[1]), (WIN_SIZE[0] * 2, WIN_SIZE[0])),
-# ((WIN_SIZE[0], 0), (WIN_SIZE[0], WIN_SIZE[1])),
-
 
 def draw(red_x, red_y, blue_x, blue_y, puck_x, puck_y):
     # draw background
@@ -68,8 +62,17 @@ def main():
     red = pygame.Rect((WIN_SIZE[0] / 9, WIN_SIZE[1] / 2 - PLAYER_WIDTH / 2), (PLAYER_WIDTH, PLAYER_HEIGHT))
     blue = pygame.Rect((WIN_SIZE[0] - WIN_SIZE[0] / 5, WIN_SIZE[1] - WIN_SIZE[1] / 2 - PLAYER_WIDTH / 2), (PLAYER_WIDTH, PLAYER_HEIGHT))
 
+    red_mask = pygame.mask.from_surface(RED_MODEL)
+    blue_mask = pygame.mask.from_surface(BLUE_MODEL)
+
     # make puck
     puck = pygame.Rect((WIN_SIZE[0] / 2 - PUCK_WIDTH / 2, WIN_SIZE[1] / 2 - PUCK_HEIGHT / 2), (PUCK_WIDTH, PUCK_HEIGHT))
+
+    puck_mask = pygame.mask.from_surface(PUCK_MODEL)
+
+    # make mouse
+    mouse = pygame.Surface((1, 1))
+    mouse_mask = pygame.mask.from_surface(mouse)
 
     # make drag variable
     red_drag = False
@@ -90,6 +93,9 @@ def main():
         clock.tick(60)
         if frame < 3:
             frame += 1
+
+        # get mouse pos
+        mouse_pos = pygame.mouse.get_pos()
         
         # event loop
         for event in pygame.event.get():
@@ -104,53 +110,49 @@ def main():
             # red player movement
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
-                    if red.collidepoint(event.pos):
+                    if red_mask.overlap(mouse_mask, (mouse_pos[0] - red.x, mouse_pos[1] - red.y)):
                         red_drag = True
-                        mouse_x, mouse_y = event.pos
-                        offset_x = red.x - mouse_x
-                        offset_y = red.y - mouse_y
+                        offset_x = red.x - mouse_pos[0]
+                        offset_y = red.y - mouse_pos[1]
             if event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
                     red_drag = False
                     
             if event.type == pygame.MOUSEMOTION:
                 if red_drag:
-                    mouse_x, mouse_y = event.pos
-                    red.x = mouse_x + offset_x
-                    red.y = mouse_y + offset_y
+                    red.x = mouse_pos[0] + offset_x
+                    red.y = mouse_pos[1] + offset_y
 
             # blue player movement
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
-                    if blue.collidepoint(event.pos):
+                    if blue_mask.overlap(mouse_mask, (mouse_pos[0] - blue.x, mouse_pos[1] - blue.y)):
                         blue_drag = True
-                        mouse_x, mouse_y = event.pos
-                        offset_x = blue.x - mouse_x
-                        offset_y = blue.y - mouse_y
+                        offset_x = blue.x - mouse_pos[0]
+                        offset_y = blue.y - mouse_pos[1]
             if event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
                     blue_drag = False
                     
             if event.type == pygame.MOUSEMOTION:
                 if blue_drag:
-                    mouse_x, mouse_y = event.pos
-                    blue.x = mouse_x + offset_x
-                    blue.y = mouse_y + offset_y
+                    blue.x = mouse_pos[0] + offset_x
+                    blue.y = mouse_pos[1] + offset_y
 
         # set player / puck velocity to 0 when under 0.3
         if -0.3 <= puck_vel_x <= 0.3:
             puck_vel_x = 0
-        if -0.3 <= puck_vel_x <= 0.3:
+        if -0.3 <= puck_vel_y <= 0.3:
             puck_vel_y = 0
 
         if -0.3 <= red_vel_x <= 0.3:
             red_vel_x = 0
-        if -0.3 <= red_vel_x <= 0.3:
+        if -0.3 <= red_vel_y <= 0.3:
             red_vel_y = 0
 
         if -0.3 <= blue_vel_x <= 0.3:
             blue_vel_x = 0
-        if -0.3 <= blue_vel_x <= 0.3:
+        if -0.3 <= blue_vel_y <= 0.3:
             blue_vel_y = 0
 
         # calculate players velocity
@@ -180,21 +182,29 @@ def main():
         if red.colliderect(walls[4]):
             pass
         else:
-            if red.colliderect(puck):
+            if red_mask.overlap(puck_mask, (puck.x - red.x, puck.y - red.y)):
                 if red_vel_x == 0 and red_vel_y == 0:
                     puck_vel_x *= -1
                     puck_vel_y *= -1
-
-                puck_vel_x, puck_vel_y = red_vel_x, red_vel_y
+                else:
+                    puck_vel_x, puck_vel_y = red_vel_x, red_vel_y
         if blue.colliderect(walls[5]):
             pass
         else:
-            if blue.colliderect(puck):
+            if blue_mask.overlap(puck_mask, (puck.x - blue.x, puck.y - blue.y)):
                 if blue_vel_x == 0 and blue_vel_y == 0:
-                    puck_vel_x *= -1
-                    puck_vel_y *= -1
+                    #fix
+                    if puck.centerx > blue.centerx:
+                        puck_vel_x *= -1
+                    elif puck.centerx < blue.centerx:
+                        puck_vel_x *= -1
+                    elif puck.centery > blue.centery:
+                        puck_vel_y *= -1
+                    elif puck.centery < blue.centery:
+                        puck_vel_y *= -1
 
-                puck_vel_x, puck_vel_y = blue_vel_x, blue_vel_y
+                else:
+                    puck_vel_x, puck_vel_y = blue_vel_x, blue_vel_y
         
         
         puck.x += puck_vel_x
@@ -205,31 +215,46 @@ def main():
         puck_vel_y *= PUCK_FRICTION
 
         # teleport puck outside player when interacting
-        if red.colliderect(walls[4]):
-            pass
-        else:
-            if red.colliderect(puck):
-                if puck.centerx > red.centerx:
-                    puck.left = red.right
-                elif puck.centerx < red.centerx:
-                    puck.right = red.left
-                elif puck.centery > red.centery:
-                    puck.top = red.bottom
-                elif puck.centery < red.centery:
-                    puck.bottom = red.top
+        # if red.colliderect(walls[4]):
+        #     pass
+        # else:
+        #     if red_mask.overlap(puck_mask, (puck.x - red.x, puck.y - red.y)):
+        #         if puck.centerx > red.centerx:
+        #             puck.left = red.right
+        #         elif puck.centerx < red.centerx:
+        #             puck.right = red.left
+        #         if puck.centery > red.centery:
+        #             puck.top = red.bottom
+        #         elif puck.centery < red.centery:
+        #             puck.bottom = red.top
 
-        if blue.colliderect(walls[5]):
-            pass
-        else:
-            if blue.colliderect(puck):
-                if puck.centerx > blue.centerx:
-                    puck.left = blue.right
-                elif puck.centerx < blue.centerx:
-                    puck.right = blue.left
-                elif puck.centery > blue.centery:
-                    puck.top = blue.bottom
-                elif puck.centery < blue.centery:
-                    puck.bottom = blue.top
+        # if blue.colliderect(walls[5]):
+        #     pass
+        # else:
+        #     if blue_mask.overlap(puck_mask, (puck.x - blue.x, puck.y - blue.y)):
+        #         if puck.centerx > blue.centerx:
+        #             puck_vel_x += 2
+        #         elif puck.centerx < blue.centerx:
+        #             puck_vel_x -= 2
+        #         if puck.centery > blue.centery:
+        #             puck_vel_x += 2
+        #         elif puck.centery < blue.centery:
+        #             puck_vel_x -= 2
+
+        # overlapx = puck.centerx - blue.centerx
+        # overlapy = puck.centery - blue.centery
+        # if blue.colliderect(walls[5]):
+        #     pass
+        # else:
+        #     if overlapx < ((PLAYER_WIDTH / 2) - 1) and overlapx > -((PLAYER_WIDTH / 2) - 1):
+        #         puck_vel_x -= 0.4
+        #     elif overlapx > (0) and overlapx < ((PLAYER_WIDTH / 2) + 1):
+        #         puck_vel_x += 0.4
+        #     if overlapy < ((PLAYER_WIDTH / 2) - 1) and overlapy > -((PLAYER_WIDTH / 2) - 1):
+        #         puck_vel_y -= 0.4
+        #     elif overlapy > (0) and overlapy < -((PLAYER_WIDTH / 2) - 1):
+        #         puck_vel_y += 0.4
+                
         
         # puck/players wall collision detection
         if puck.colliderect(walls[0]):
