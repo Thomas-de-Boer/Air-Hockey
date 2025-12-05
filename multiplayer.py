@@ -1,5 +1,4 @@
 import pygame
-import pygame._sdl2.touch
 import ctypes
 ctypes.windll.user32.SetProcessDPIAware()
 pygame.display.init()
@@ -11,6 +10,9 @@ PUCK_WIDTH, PUCK_HEIGHT = WIN_SIZE[0] * 0.05625, WIN_SIZE[1] * 0.1
 
 PUCK_FRICTION = 0.97
 PLAYER_FRICTION = 0.75
+
+MOUSE_MOVEMENT = True
+TOUCHSCREEN_MOVEMENT = False
 
 WIN = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 
@@ -74,9 +76,21 @@ def main():
     mouse = pygame.Surface((1, 1))
     mouse_mask = pygame.mask.from_surface(mouse)
 
-    # make drag variable
+    # make finger
+    finger = pygame.Surface((1, 1))
+    finger_mask = pygame.mask.from_surface(finger)
+
+    # make touchscreen variables
+    red_dragging_finger = None
+    blue_dragging_finger = None
+    red_drag_offset = (0, 0)
+    blue_drag_offset = (0, 0)
+
+    # make drag variable for mouse controlls
     red_drag = False
     blue_drag = False
+    red_offset = [0, 0]
+    blue_offset = [0, 0]
 
     # make frame variable
     frame = 0
@@ -93,9 +107,6 @@ def main():
         clock.tick(60)
         if frame < 3:
             frame += 1
-
-        # get mouse pos
-        mouse_pos = pygame.mouse.get_pos()
         
         # event loop
         for event in pygame.event.get():
@@ -107,37 +118,98 @@ def main():
                 if event.key == pygame.K_ESCAPE:
                     running = False
 
-            # red player movement
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    if red_mask.overlap(mouse_mask, (mouse_pos[0] - red.x, mouse_pos[1] - red.y)):
-                        red_drag = True
-                        offset_x = red.x - mouse_pos[0]
-                        offset_y = red.y - mouse_pos[1]
-            if event.type == pygame.MOUSEBUTTONUP:
-                if event.button == 1:
-                    red_drag = False
-                    
-            if event.type == pygame.MOUSEMOTION:
-                if red_drag:
-                    red.x = mouse_pos[0] + offset_x
-                    red.y = mouse_pos[1] + offset_y
+            # get mouse pos
+            mouse_pos = pygame.mouse.get_pos()
 
-            # blue player movement
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    if blue_mask.overlap(mouse_mask, (mouse_pos[0] - blue.x, mouse_pos[1] - blue.y)):
-                        blue_drag = True
-                        offset_x = blue.x - mouse_pos[0]
-                        offset_y = blue.y - mouse_pos[1]
-            if event.type == pygame.MOUSEBUTTONUP:
-                if event.button == 1:
-                    blue_drag = False
-                    
-            if event.type == pygame.MOUSEMOTION:
-                if blue_drag:
-                    blue.x = mouse_pos[0] + offset_x
-                    blue.y = mouse_pos[1] + offset_y
+            if MOUSE_MOVEMENT:
+                # red player mouse movement
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        if red_mask.overlap(mouse_mask, (mouse_pos[0] - red.x, mouse_pos[1] - red.y)):
+                            red_drag = True
+                            red_offset[0] = red.x - mouse_pos[0]
+                            red_offset[1] = red.y - mouse_pos[1]
+                if event.type == pygame.MOUSEBUTTONUP:
+                    if event.button == 1:
+                        red_drag = False
+                        
+                if event.type == pygame.MOUSEMOTION:
+                    if red_drag:
+                        red.x = mouse_pos[0] + red_offset[0]
+                        red.y = mouse_pos[1] + red_offset[1]
+
+                # blue player mouse movement
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        if blue_mask.overlap(mouse_mask, (mouse_pos[0] - blue.x, mouse_pos[1] - blue.y)):
+                            blue_drag = True
+                            blue_offset[0] = blue.x - mouse_pos[0]
+                            blue_offset[1] = blue.y - mouse_pos[1]
+                if event.type == pygame.MOUSEBUTTONUP:
+                    if event.button == 1:
+                        blue_drag = False
+                        
+                if event.type == pygame.MOUSEMOTION:
+                    if blue_drag:
+                        blue.x = mouse_pos[0] + blue_offset[0]
+                        blue.y = mouse_pos[1] + blue_offset[1]
+
+
+            # touchscreen movement
+            if TOUCHSCREEN_MOVEMENT:
+                if event.type == pygame.FINGERDOWN:
+                    x = int(event.x * WIN_SIZE[0])
+                    y = int(event.y * WIN_SIZE[1])
+
+                    # check if finger is on red
+                    if red_dragging_finger is None:
+                        offset_x = red.x - x
+                        offset_y = red.y - y
+                        if red_mask.overlap(finger_mask, (x - red.x, y - red.y)):
+                            red_dragging_finger = event.finger_id
+                            red_drag_offset = (offset_x, offset_y)
+
+                    # check if finger is on blue
+                    if blue_dragging_finger is None:
+                        offset_x = blue.x - x
+                        offset_y = blue.y - y
+                        if blue_mask.overlap(finger_mask, (x - blue.x, y - blue.y)):
+                            blue_dragging_finger = event.finger_id
+                            blue_drag_offset = (offset_x, offset_y)
+
+                if event.type == pygame.FINGERUP:
+                    # let go when finger is lifted
+                    if red_dragging_finger == event.finger_id:
+                        red_dragging_finger = None
+                    if blue_dragging_finger == event.finger_id:
+                        blue_dragging_finger = None
+
+                if event.type == pygame.FINGERMOTION:
+                    # update position when moving
+                    x = int(event.x * WIN_SIZE[0])
+                    y = int(event.y * WIN_SIZE[1])
+
+                    # move player when dragged
+                    if red_dragging_finger == event.finger_id:
+                        red.x = x + red_drag_offset[0]
+                        red.y = y + red_drag_offset[1]
+
+                    # move player when dragged
+                    if blue_dragging_finger == event.finger_id:
+                        blue.x = x + blue_drag_offset[0]
+                        blue.y = y + blue_drag_offset[1]
+
+        if TOUCHSCREEN_MOVEMENT:
+            red_drag = red_dragging_finger is not None
+            blue_drag = blue_dragging_finger is not None
+
+        # calculate players velocity
+        if red_drag:
+            red_vel_x = red.x - red_old_x
+            red_vel_y = red.y - red_old_y
+        if blue_drag:
+            blue_vel_x = blue.x - blue_old_x
+            blue_vel_y = blue.y - blue_old_y
 
         # set player / puck velocity to 0 when under 0.3
         if -0.3 <= puck_vel_x <= 0.3:
@@ -154,14 +226,6 @@ def main():
             blue_vel_x = 0
         if -0.3 <= blue_vel_y <= 0.3:
             blue_vel_y = 0
-
-        # calculate players velocity
-        if red_drag:
-            red_vel_x = red.x - red_old_x
-            red_vel_y = red.y - red_old_y
-        if blue_drag:
-            blue_vel_x = blue.x - blue_old_x
-            blue_vel_y = blue.y - blue_old_y
 
         # make players slide
         if frame > 2:
@@ -184,8 +248,15 @@ def main():
         else:
             if red_mask.overlap(puck_mask, (puck.x - red.x, puck.y - red.y)):
                 if red_vel_x == 0 and red_vel_y == 0:
-                    puck_vel_x *= -1
-                    puck_vel_y *= -1
+                    if puck.centerx > red.centerx:
+                        puck_vel_x *= -1
+                    elif puck.centerx < red.centerx:
+                        puck_vel_x *= -1
+                    elif puck.centery > red.centery:
+                        puck_vel_y *= -1
+                    elif puck.centery < red.centery:
+                        puck_vel_y *= -1
+
                 else:
                     puck_vel_x, puck_vel_y = red_vel_x, red_vel_y
         if blue.colliderect(walls[5]):
@@ -193,7 +264,6 @@ def main():
         else:
             if blue_mask.overlap(puck_mask, (puck.x - blue.x, puck.y - blue.y)):
                 if blue_vel_x == 0 and blue_vel_y == 0:
-                    #fix
                     if puck.centerx > blue.centerx:
                         puck_vel_x *= -1
                     elif puck.centerx < blue.centerx:
@@ -205,7 +275,6 @@ def main():
 
                 else:
                     puck_vel_x, puck_vel_y = blue_vel_x, blue_vel_y
-        
         
         puck.x += puck_vel_x
         puck.y += puck_vel_y
