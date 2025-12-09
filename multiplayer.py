@@ -69,7 +69,6 @@ def main():
 
     # make puck
     puck = pygame.Rect((WIN_SIZE[0] / 2 - PUCK_WIDTH / 2, WIN_SIZE[1] / 2 - PUCK_HEIGHT / 2), (PUCK_WIDTH, PUCK_HEIGHT))
-
     puck_mask = pygame.mask.from_surface(PUCK_MODEL)
 
     # make mouse
@@ -101,6 +100,10 @@ def main():
     blue_vel_x, blue_vel_y = 0, 0
     blue_old_x, blue_old_y = 0, 0
     puck_vel_x, puck_vel_y = 0, 0
+
+    # make variables for pushing puck out of player
+    # overlap_point = []
+    dir_X, dir_y = 0, 0
 
     running = True
     while running:
@@ -283,47 +286,37 @@ def main():
         puck_vel_x *= PUCK_FRICTION
         puck_vel_y *= PUCK_FRICTION
 
-        # teleport puck outside player when interacting
-        # if red.colliderect(walls[4]):
-        #     pass
-        # else:
-        #     if red_mask.overlap(puck_mask, (puck.x - red.x, puck.y - red.y)):
-        #         if puck.centerx > red.centerx:
-        #             puck.left = red.right
-        #         elif puck.centerx < red.centerx:
-        #             puck.right = red.left
-        #         if puck.centery > red.centery:
-        #             puck.top = red.bottom
-        #         elif puck.centery < red.centery:
-        #             puck.bottom = red.top
+        # teleport puck outside player when colliding
+        overlap_point = red_mask.overlap(puck_mask, (puck.x - red.x, puck.y - red.y))
+        if overlap_point:
+            center_x = red.width // 2
+            center_y = red.height // 2
+            dir_x = overlap_point[0] - center_x
+            dir_y = overlap_point[1] - center_y
 
-        # if blue.colliderect(walls[5]):
-        #     pass
-        # else:
-        #     if blue_mask.overlap(puck_mask, (puck.x - blue.x, puck.y - blue.y)):
-        #         if puck.centerx > blue.centerx:
-        #             puck_vel_x += 2
-        #         elif puck.centerx < blue.centerx:
-        #             puck_vel_x -= 2
-        #         if puck.centery > blue.centery:
-        #             puck_vel_x += 2
-        #         elif puck.centery < blue.centery:
-        #             puck_vel_x -= 2
+            length = (dir_x**2 + dir_y**2) ** 0.5
+            if length > 0:
+                dir_x /= length
+                dir_y /= length
 
-        # overlapx = puck.centerx - blue.centerx
-        # overlapy = puck.centery - blue.centery
-        # if blue.colliderect(walls[5]):
-        #     pass
-        # else:
-        #     if overlapx < ((PLAYER_WIDTH / 2) - 1) and overlapx > -((PLAYER_WIDTH / 2) - 1):
-        #         puck_vel_x -= 0.4
-        #     elif overlapx > (0) and overlapx < ((PLAYER_WIDTH / 2) + 1):
-        #         puck_vel_x += 0.4
-        #     if overlapy < ((PLAYER_WIDTH / 2) - 1) and overlapy > -((PLAYER_WIDTH / 2) - 1):
-        #         puck_vel_y -= 0.4
-        #     elif overlapy > (0) and overlapy < -((PLAYER_WIDTH / 2) - 1):
-        #         puck_vel_y += 0.4
-                
+            puck.x += dir_X * 4
+            puck.y += dir_y * 4
+
+        overlap_point = blue_mask.overlap(puck_mask, (puck.x - blue.x, puck.y - blue.y))
+        if overlap_point:
+            center_x = blue.width // 2
+            center_y = blue.height // 2
+            dir_x = overlap_point[0] - center_x
+            dir_y = overlap_point[1] - center_y
+
+            length = (dir_x**2 + dir_y**2) ** 0.5
+            if length > 0:
+                dir_x /= length
+                dir_y /= length
+
+            puck.x += dir_X * 4
+            puck.y += dir_y * 4
+        
         
         # puck/players wall collision detection
         if puck.colliderect(walls[0]):
