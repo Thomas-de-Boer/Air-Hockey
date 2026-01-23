@@ -1,15 +1,15 @@
-<?php
-$servername = "localhost";
-$username = "root";
-$password = "920kroket";
-$dbname = "AirBlitz";
+<!-- // <?php
+// $servername = "localhost";
+// $username = "root";
+// $password = "920kroket";
+// $dbname = "AirBlitz";
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+// $conn = new mysqli($servername, $username, $password, $dbname);
 
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-?>
+// if ($conn->connect_error) {
+//     die("Connection failed: " . $conn->connect_error);
+// }
+// ?> -->
 <html>
 <head>
     <title>Highscores Airhockey</title>
@@ -36,7 +36,7 @@ if ($conn->connect_error) {
         <table class="Tabletextcolor">
         <br><br>Round Duration 5 Minutes<br><br>
         <tr><td>Playername</td><td>&nbsp;&nbsp;Score&nbsp;&nbsp;</td><td>HighscoreDate</td></tr>
-            <?php
+            <!-- <?php
             $sql = "select * from fivemins order by score desc limit 10;";
             $result = $conn->query($sql);
             if ($result->num_rows > 0) {
@@ -50,7 +50,7 @@ if ($conn->connect_error) {
             } else {
                 echo "<tr><td colspan='3'>Geen resultaten</td></tr>";
             }
-            ?>
+            ?> -->
         </table>
         <h4><span class="Tableunderline">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span></h4>
     </div>
@@ -62,7 +62,7 @@ if ($conn->connect_error) {
         <table class="Tabletextcolor">
             <br><br>Round Duration 10 Minutes<br><br>
             <tr><td>Playername</td><td>&nbsp;&nbsp;Score&nbsp;&nbsp;</td><td>HighscoreDate</td></tr>
-            <?php
+            <!-- <?php
             $sql = "select * from tenmins order by score desc limit 10;";
             $result = $conn->query($sql);
             if ($result->num_rows > 0) {
@@ -76,7 +76,7 @@ if ($conn->connect_error) {
             } else {
                 echo "<tr><td colspan='3'>Geen resultaten</td></tr>";
             }
-            ?>
+            ?> -->
         </table>
         <h4><span class="Tableunderline">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span></h4>
     </div>
@@ -88,7 +88,7 @@ if ($conn->connect_error) {
         <table class="Tabletextcolor">
             <br><br>Round Duration 15 Minutes<br><br>
             <tr><td>Playername</td><td>&nbsp;&nbsp;Score&nbsp;&nbsp;</td><td>HighscoreDate</td></tr>
-            <?php
+            <!-- <?php
             $sql = "select * from fifteenmins order by score desc limit 10;";
             $result = $conn->query($sql);
             if ($result->num_rows > 0) {
@@ -103,7 +103,7 @@ if ($conn->connect_error) {
                 echo "<tr><td colspan='3'>Geen resultaten</td></tr>";
             }
             $conn->close();
-            ?>
+            ?> -->
         </table>
         <h4><span class="Tableunderline">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span></h4>
     </div>
@@ -195,3 +195,4 @@ if ($conn->connect_error) {
 </body>
 
 </html>
+
