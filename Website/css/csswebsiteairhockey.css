@@ -1,0 +1,403 @@
+
+html {
+    scroll-behavior: smooth;
+}
+body {
+    margin: 0;
+    height: 200%;
+    font-size: 2vh;
+}
+.Background {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    margin-left: 0.4%;
+}
+.Title {
+    z-index: 100;
+    position: absolute;
+    width: 50%;
+    height: 30%;
+    margin-left: 25%;
+    margin-top: 2.5%;
+    object-fit: fill;
+}
+
+
+.Highscores5Mins {
+    margin-left: 28.3%;
+    z-index: 5;
+    position: absolute;
+    width: 43.4%;
+    height: 67.7%;
+    background-image: url("assets/placeholdersquare.jpg");
+    background-position: center;
+    margin-top: 30%;
+    text-align: center;
+}
+.Highscore5Mins {
+    font-family: "Copperplate Gothic Light";
+    text-align: center;
+    background: linear-gradient(to right, #ff0000 35%, #0033ff 65%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    margin: 0 auto;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
+.Highscores10Mins {
+    margin-left: 28.3%;
+    z-index: 5;
+    position: absolute;
+    width: 43.4%;
+    height: 67.7%;
+    background-image: url("assets/placeholdersquare.jpg");
+    background-position: center;
+    margin-top: 75%;
+    text-align: center;
+    /*box-shadow: 0px 0px 10px black inset;*/
+}
+.Highscore10Mins {
+    font-family: "Copperplate Gothic Light";
+    text-align: center;
+    background: linear-gradient(to right, #ff0000 35%, #0033ff 65%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    margin: 0 auto;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
+.Highscores15Mins {
+    margin-left: 28.3%;
+    z-index: 2;
+    position: absolute;
+    width: 43.4%;
+    height: 67.7%;
+    background-image: url("assets/placeholdersquare.jpg");
+    background-position: center;
+    margin-top: 120%;
+    text-align: center;
+}
+.Highscore15Mins {
+    font-family: "Copperplate Gothic Light";
+    text-align: center;
+    background: linear-gradient(to right, #ff0000 35%, #0033ff 65%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    margin: 0 auto;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
+.Tabletextcolor {
+    background: linear-gradient(to right, #ff0000 35%, #0033ff 65%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+    margin: 0 auto;
+    font-size: 2vh;
+
+}
+.Tablesize {
+    scale: 112%;
+    margin-top: -2%;
+}
+.Tableunderline {
+    background: linear-gradient(to right, #ff0000 35%, #0033ff 65%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    font-family: "Copperplate Gothic Light";
+}
+
+
+.Redgamemodetext {
+    color: #ff0000;
+    text-shadow: #ff4242 2px 2px 5px;
+    font-weight: bolder;
+    font-family: "Courier New";
+}
+
+.Bluegamemodetext {
+    color: #0000ff;
+    text-shadow: #4261ff 2px 2px 5px;
+    font-weight: bolder;
+    font-family: "Courier New";
+}
+
+.Singleplayer {
+    position: absolute;
+    margin-top: 60%;
+    margin-left: 20%;
+    width: 20%;
+    height: 45%;
+
+    background-color: rgba(255,255,255, 0.7);
+    border: 5px solid rgba(255,000,000, 0.8);
+    box-shadow: 0px 0px 5px red inset;
+    border-radius: 5px;
+}
+.Singleplayerimage {
+    border-bottom: 3.5px solid rgba(255,000,000, 0.8);
+    box-shadow: 0px 0px 15px red;
+}
+
+.Multiplayer {
+    position: absolute;
+    margin-top: 60%;
+    margin-left: 60%;
+    width: 20%;
+    height: 45%;
+
+    background-color: rgba(255,255,255, 0.7);
+    border: 5px solid rgba(000,000,255, 0.8);
+    box-shadow: 0px 0px 5px blue inset;
+    border-radius: 5px;
+}
+.Multiplayerimage {
+    border-bottom: 3.5px solid rgba(000,000,255, 0.8);
+    box-shadow: 0px 0px 15px blue;
+}
+
+.Double-Ball {
+    position: absolute;
+    margin-top: 95%;
+    margin-left: 20%;
+    width: 20%;
+    height: 45%;
+
+    background-color: rgba(255,255,255, 0.7);
+    border: 5px solid rgba(255,000,000, 0.8);
+    box-shadow: 0px 0px 5px red inset;
+    border-radius: 5px;
+}
+.Double-Ballimage {
+    border-bottom: 3.5px solid rgba(255,000,000, 0.8);
+    box-shadow: 0px 0px 15px red;
+}
+
+.Obstacles {
+    position: absolute;
+    margin-top: 95%;
+    margin-left: 60%;
+    width: 20%;
+    height: 45%;
+
+    background-color: rgba(255,255,255, 0.7);
+    border: 5px solid rgba(000,000,255, 0.8);
+    box-shadow: 0px 0px 5px blue inset;
+    border-radius: 5px;
+}
+.Obstaclesimage {
+    border-bottom: 3.5px solid rgba(000,000,255, 0.8);
+    box-shadow: 0px 0px 15px blue;
+}
+
+.Two-vs-Two {
+    position: absolute;
+    margin-top: 130%;
+    margin-left: 20%;
+    width: 20%;
+    height: 45%;
+
+    background-color: rgba(255,255,255, 0.7);
+    border: 5px solid rgba(255,000,000, 0.8);
+    box-shadow: 0px 0px 5px red inset;
+    border-radius: 5px;
+}
+.Two-vs-Twoimage {
+    border-bottom: 3.5px solid rgba(255,000,000, 0.8);
+    box-shadow: 0px 0px 15px red;
+}
+
+.Free-For-All {
+    position: absolute;
+    margin-top: 130%;
+    margin-left: 60%;
+    width: 20%;
+    height: 45%;
+
+    background-color: rgba(255,255,255, 0.7);
+    border: 5px solid rgba(000,000,255, 0.8);
+    box-shadow: 0px 0px 5px blue inset;
+    border-radius: 5px;
+}
+.Free-For-Allimage {
+    border-bottom: 3.5px solid rgba(000,000,255, 0.8);
+    box-shadow: 0px 0px 15px blue;
+}
+
+.Highscore {
+    position: absolute;
+    margin-top: 165%;
+    margin-left: 20%;
+    width: 20%;
+    height: 45%;
+
+    background-color: rgba(255,255,255, 0.7);
+    border: 5px solid rgba(255,000,000, 0.8);
+    box-shadow: 0px 0px 5px red inset;
+    border-radius: 5px;
+}
+.Highscoreimage {
+    border-bottom: 3.5px solid rgba(255,000,000, 0.8);
+    box-shadow: 0px 0px 15px red;
+}
+
+.Nine-Pucks {
+    position: absolute;
+    margin-top: 165%;
+    margin-left: 60%;
+    width: 20%;
+    height: 45%;
+
+    background-color: rgba(255,255,255, 0.7);
+    border: 5px solid rgba(000,000,255, 0.8);
+    box-shadow: 0px 0px 5px blue inset;
+    border-radius: 5px;
+}
+.Nine-Pucksimage {
+    border-bottom: 3.5px solid rgba(000,000,255, 0.8);
+    box-shadow: 0px 0px 15px blue;
+}
+
+.SidebarLeft {
+    overflow: hidden;
+    position:fixed;left:0;top:-100%;
+}
+
+.SidebarLeftMoving {
+    width: 10%;
+    height: 100%;
+    position:fixed;left:0;top:-100%;
+
+    animation-name: vertical-move-down;
+    animation-duration: 13s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+.SidebarLeft2 {
+    overflow: hidden;
+        position:fixed;left:0;top:0;
+}
+
+.SidebarLeftMoving2 {
+    width: 10%;
+    height: 100%;
+    position:fixed;left:0;top:0;
+
+    animation-name: vertical-move-down;
+    animation-duration: 13s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+
+.SidebarRight {
+    overflow: hidden;
+    position:fixed;left:90%;top:100%;
+}
+
+.SidebarRightMoving {
+    width: 10%;
+    height: 100%;
+    position:fixed;left:90%;top:100%;
+
+    animation-name: vertical-move-up;
+    animation-duration: 13s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+.SidebarRight2 {
+    overflow: hidden;
+    position:fixed;left:90%;top:0;
+}
+
+.SidebarRightMoving2 {
+    width: 10%;
+    height: 100%;
+    position:fixed;left:90%;top:0;
+
+    animation-name: vertical-move-up;
+    animation-duration: 13s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+
+@keyframes vertical-move-down {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(100%);
+    }
+}
+
+@keyframes vertical-move-up {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-100%);
+    }
+}
+
+@media (max-width: 725px) {
+body {
+        font-size: 12.5px;
+    }
+    .Highscores5Mins {
+        margin-top: 81vh;
+    }
+    .Highscore5Mins {
+        font-family: "Cinzel";
+        margin-left: -3.94%;
+    }
+    .Highscores10Mins {
+        margin-top: 225vh;
+    }
+    .Highscore10Mins {
+        font-family: "Cinzel";
+    }
+    .Highscores15Mins {
+        margin-top: 336vh;
+    }
+    .Highscore15Mins {
+        font-family: "Cinzel";
+    }
+    .Tabletextcolor {
+        font-size: 6px;
+        margin-left: 15%;
+    }
+    .Tableunderline {
+        font-size: 6.8px;
+        margin-left: 21%;
+        font-family: Cinzel;
+    }
+    .Gamemodes {
+        margin-top: 50%;
+    }
+}
